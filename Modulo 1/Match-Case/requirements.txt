@@ -1,0 +1,12 @@
+tkinter
+time
+Pillow
+numpy
+simpleaudio
+argparse
+sys
+threading
+pathlib
+random
+pygame
+playsound
