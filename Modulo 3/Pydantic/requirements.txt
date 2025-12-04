@@ -1,0 +1,5 @@
+dataclasses
+enum
+pydantic
+typing
+requests
