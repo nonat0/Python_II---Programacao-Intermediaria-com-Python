@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Criar Novo Post</h1>
+  <p>Compartilhe seus pensamentos com o mundo!</p>
+  
+  <form action="/post" method="post">
+    <div>
+      <label for="body">O que você está pensando?</label>
+      <textarea name="body" 
+                id="body" 
+                rows="6" 
+                placeholder="Escreva seu post aqui..."
+                required></textarea>
+    </div>
+    
+    <div>
+      <button type="submit">Publicar Post</button>
+      <a href="/">Cancelar</a>
+    </div>
+  </form>
+{% endblock %}

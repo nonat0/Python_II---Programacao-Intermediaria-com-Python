@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Cadastro de Novo Usuário</h1>
+  <p>Preencha os campos abaixo para criar sua conta:</p>
+  
+  <form action="/cadastro" method="post">
+    <div>
+      <label for="username">Usuário:</label>
+      <input type="text" name="username" id="username" required>
+    </div>
+    
+    <div>
+      <label for="password">Senha:</label>
+      <input type="password" name="password" id="password" required>
+    </div>
+    
+    <div>
+      <label for="photo_url">URL da Foto de Perfil:</label>
+      <input type="url" name="photo_url" id="photo_url" 
+             placeholder="https://exemplo.com/sua-foto.jpg">
+      <small>Deixe em branco para usar a foto padrão</small>
+    </div>
+    
+    <div>
+      <label for="bio">Bio (descreva-se brevemente):</label>
+      <textarea name="bio" id="bio" rows="4" 
+                placeholder="Conte um pouco sobre você..."></textarea>
+    </div>
+    
+    <div>
+      <label>
+        <input type="checkbox" name="remember" id="remember">
+        Lembrar de mim
+      </label>
+    </div>
+    
+    <div>
+      <button type="submit">Criar Conta</button>
+      <a href="/login">Já tem uma conta? Faça login</a>
+    </div>
+  </form>
+{% endblock %}

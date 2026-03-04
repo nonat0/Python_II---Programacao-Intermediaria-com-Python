@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card" style="max-width: 800px; margin: 3rem auto;">
+    <h1 style="margin-bottom: 0.5rem;">✍️ Editar Biografia</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">
+      Conte um pouco sobre você para os outros usuários
+    </p>
+    
+    <!-- Formulário para atualizar bio -->
+    <form action="/profile/bio" method="post" novalidate>
+      <input type="hidden" name="action" value="update">
+      
+      <div class="form-group">
+        <label for="bio">
+          Sua Biografia
+        </label>
+        <textarea name="bio" 
+                  id="bio" 
+                  rows="6" 
+                  placeholder="Escreva algo interessante sobre você..."
+                  maxlength="500"
+                  aria-describedby="bio-help"
+                  autofocus>{{ user.bio or '' }}</textarea>
+        <small id="bio-help" class="text-muted" style="display: block; margin-top: 0.25rem;">
+          Máximo de 500 caracteres
+        </small>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button type="submit" class="btn btn-primary">
+          <span aria-hidden="true">💾</span> Salvar Bio
+        </button>
+        <a href="/" class="btn btn-secondary">
+          <span aria-hidden="true">←</span> Cancelar
+        </a>
+      </div>
+    </form>
+    
+    <!-- Opção de remover bio -->
+    {% if user.bio %}
+      <hr>
+      <form action="/profile/bio" method="post" 
+            onsubmit="return confirm('Tem certeza que deseja remover sua bio?');">
+        <input type="hidden" name="action" value="remove">
+        <button type="submit" class="btn btn-danger" style="width: 100%;">
+          <span aria-hidden="true">🗑️</span> Remover Bio
+        </button>
+      </form>
+    {% endif %}
+  </div>
+  
+  <!-- Exemplos de bio -->
+  <div class="card" style="max-width: 800px; margin: 2rem auto; background: rgba(99, 102, 241, 0.05);">
+    <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">💡 Exemplos de bio interessante:</h3>
+    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+      <li>Desenvolvedor Python 🐍 | Amante de café ☕ | São Paulo, BR</li>
+      <li>Designer UI/UX apaixonado por criar experiências incríveis ✨</li>
+      <li>Estudante de Ciência da Computação | Tech enthusiast | Aprendendo algo novo todo dia 📚</li>
+      <li>Fotógrafo nas horas vagas 📸 | Viajante | Explorando o mundo pixel por pixel</li>
+    </ul>
+  </div>
+{% endblock %}

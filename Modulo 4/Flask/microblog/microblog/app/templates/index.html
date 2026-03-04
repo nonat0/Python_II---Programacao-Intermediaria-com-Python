@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if user %}
+        <!-- Perfil do Usuário -->
+        <section class="user-profile" aria-labelledby="profile-heading">
+            <h1 id="profile-heading">Bem-vindo, {{ user.username }}! 👋</h1>
+            
+            <!-- Foto de Perfil com Popup -->
+            <div class="profile-photo-wrapper">
+                <div class="profile-photo" id="profilePhoto">
+                    <img src="{{ user.photo_url or url_for('static', filename='img/user.png') }}" 
+                         alt="Foto de perfil de {{ user.username }}"
+                         loading="lazy">
+                    
+                    <!-- Popup de opções (aparece no hover) -->
+                    <div class="photo-popup" id="photoPopup">
+                        <a href="/profile/photo" class="photo-option">
+                            <span aria-hidden="true">{% if user.photo_url %}✏️{% else %}➕{% endif %}</span>
+                            {% if user.photo_url %}Editar Foto{% else %}Adicionar Foto{% endif %}
+                        </a>
+                        {% if user.photo_url %}
+                        <form action="/profile/photo" 
+                              method="post" 
+                              style="margin: 0;"
+                              onsubmit="return confirm('Remover foto de perfil?');">
+                            <input type="hidden" name="action" value="remove">
+                            <button type="submit" class="photo-option photo-option-danger">
+                                <span aria-hidden="true">🗑️</span> Remover Foto
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Biografia com Botões de Edição -->
+            {% if user.bio %}
+                <div class="user-bio">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="margin: 0;">Sobre mim</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="/profile/bio" 
+                               class="btn btn-secondary btn-small"
+                               aria-label="Editar biografia">
+                                <span aria-hidden="true">✏️</span> Editar
+                            </a>
+                            <form action="/profile/bio" 
+                                  method="post" 
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Remover sua bio?');">
+                                <input type="hidden" name="action" value="remove">
+                                <button type="submit" 
+                                        class="btn btn-danger btn-small"
+                                        aria-label="Remover biografia">
+                                    <span aria-hidden="true">🗑️</span> Remover
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <p>{{ user.bio }}</p>
+                </div>
+            {% else %}
+                <div style="text-align: center; margin: 2rem 0;">
+                    <p class="text-muted"><em>Você ainda não tem uma bio</em></p>
+                    <a href="/profile/bio" class="btn btn-primary btn-small" style="margin-top: 1rem;">
+                        <span aria-hidden="true">✍️</span> Adicionar Bio
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+        
+        <!-- Timeline de Posts -->
+        <section aria-labelledby="timeline-heading">
+            <div class="card-header">
+                <h2 id="timeline-heading">📰 Timeline</h2>
+                <a href="/post" class="btn btn-primary" aria-label="Criar novo post">
+                    <span aria-hidden="true">✍️</span> Novo Post
+                </a>
+            </div>
+            
+            {% if posts %}
+                <div role="feed" aria-label="Lista de posts recentes">
+                    {% for post in posts %}
+                        <article class="post" aria-labelledby="post-{{ post.id }}-author">
+                            <div class="post-author" id="post-{{ post.id }}-author">
+                                <strong>@{{ post.author.username }}</strong>
+                            </div>
+                            
+                            <div class="post-body">
+                                {{ post.body }}
+                            </div>
+                            
+                            <div class="post-meta">
+                                <time datetime="{{ post.timestamp.isoformat() }}" class="post-timestamp">
+                                    {{ post.timestamp.strftime('%d/%m/%Y às %H:%M') }}
+                                </time>
+                                
+                                <!-- Mostra data de edição se o post foi editado -->
+                                {% if post.edited_at %}
+                                    <span class="post-edited" title="Última edição">
+                                        <span aria-hidden="true">✏️</span>
+                                        Editado em {{ post.edited_at.strftime('%d/%m/%Y às %H:%M') }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Ações (apenas para posts próprios) -->
+                            {% if post.user_id == user.id %}
+                                <div class="post-actions">
+                                    <a href="/post/{{ post.id }}/edit" 
+                                       class="btn btn-secondary btn-small"
+                                       aria-label="Editar post">
+                                        <span aria-hidden="true">✏️</span> Editar
+                                    </a>
+                                    
+                                    <form action="/post/{{ post.id }}/delete" 
+                                          method="post" 
+                                          style="display: inline;"
+                                          onsubmit="return confirm('Tem certeza que deseja deletar este post?');"
+                                          aria-label="Deletar post">
+                                        <button type="submit" class="btn btn-danger btn-small">
+                                            <span aria-hidden="true">🗑️</span> Deletar
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card text-center">
+                    <p class="text-muted">
+                        <span style="font-size: 3rem; display: block; margin-bottom: 1rem;" aria-hidden="true">📝</span>
+                        Ainda não há posts na timeline.<br>
+                        Seja o primeiro a compartilhar algo!
+                    </p>
+                    <a href="/post" class="btn btn-primary mt-lg">
+                        <span aria-hidden="true">✍️</span> Criar Primeiro Post
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+        
+    {% else %}
+        <!-- Página de boas-vindas (usuário não autenticado) -->
+        <div class="card text-center" style="margin-top: 4rem; padding: 3rem;">
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">
+                Bem-vindo ao Microblog! 🚀
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                Compartilhe seus pensamentos, conecte-se com pessoas<br>
+                e descubra novas ideias.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/login" class="btn btn-primary" style="min-width: 150px;">
+                    <span aria-hidden="true">🔐</span> Fazer Login
+                </a>
+                <a href="/cadastro" class="btn btn-secondary" style="min-width: 150px;">
+                    <span aria-hidden="true">✨</span> Criar Conta
+                </a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

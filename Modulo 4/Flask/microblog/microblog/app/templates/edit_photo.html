@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card" style="max-width: 600px; margin: 3rem auto;">
+    <h1 style="margin-bottom: 0.5rem;">📷 Editar Foto de Perfil</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">
+      Atualize sua foto de perfil com uma nova URL
+    </p>
+    
+    <!-- Preview da foto atual -->
+    <div style="text-align: center; margin: 2rem 0;">
+      <div class="profile-photo">
+        <img src="{{ user.photo_url or url_for('static', filename='images/user.png') }}" 
+             alt="Foto de perfil atual"
+             style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--primary-color); object-fit: cover;">
+      </div>
+      <p class="text-muted" style="margin-top: 1rem;">Foto atual</p>
+    </div>
+    
+    <!-- Formulário para atualizar foto -->
+    <form action="/profile/photo" method="post" novalidate>
+      <input type="hidden" name="action" value="update">
+      
+      <div class="form-group">
+        <label for="photo_url">
+          Nova URL da Foto
+        </label>
+        <input type="url" 
+               name="photo_url" 
+               id="photo_url" 
+               placeholder="https://exemplo.com/sua-foto.jpg"
+               value="{{ user.photo_url or '' }}"
+               aria-describedby="photo-help">
+        <small id="photo-help" class="text-muted" style="display: block; margin-top: 0.25rem;">
+          Cole o link direto para uma imagem (JPG, PNG, GIF)
+        </small>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button type="submit" class="btn btn-primary">
+          <span aria-hidden="true">💾</span> Salvar Foto
+        </button>
+        <a href="/" class="btn btn-secondary">
+          <span aria-hidden="true">←</span> Cancelar
+        </a>
+      </div>
+    </form>
+    
+    <!-- Opção de remover foto -->
+    {% if user.photo_url %}
+      <hr>
+      <form action="/profile/photo" method="post" 
+            onsubmit="return confirm('Tem certeza que deseja remover sua foto de perfil?');">
+        <input type="hidden" name="action" value="remove">
+        <button type="submit" class="btn btn-danger" style="width: 100%;">
+          <span aria-hidden="true">🗑️</span> Remover Foto de Perfil
+        </button>
+      </form>
+    {% endif %}
+  </div>
+  
+  <!-- Dicas -->
+  <div class="card" style="max-width: 600px; margin: 2rem auto; background: rgba(99, 102, 241, 0.05);">
+    <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">💡 Onde encontrar URLs de imagens:</h3>
+    <ul style="color: var(--text-secondary); line-height: 1.8; margin-left: 1.5rem;">
+      <li>Imgur: <a href="https://imgur.com" target="_blank">imgur.com</a></li>
+      <li>Postimages: <a href="https://postimages.org" target="_blank">postimages.org</a></li>
+      <li>Avatar Placeholder: <a href="https://i.pravatar.cc/300" target="_blank">i.pravatar.cc/300</a></li>
+      <li>Ou qualquer imagem pública na internet</li>
+    </ul>
+  </div>
+{% endblock %}

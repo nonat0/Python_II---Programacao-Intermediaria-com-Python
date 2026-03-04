@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Login Page</h1>
+  <p>Please Login... XD</p>
+  
+  <form action="/login" method="post">
+    <div>
+      <label for="username">Usuário:</label>
+      <input type="text" name="username" id="username" required>
+    </div>
+    
+    <div>
+      <label for="password">Senha:</label>
+      <input type="password" name="password" id="password" required>
+    </div>
+    
+    <div>
+      <label>
+        <input type="checkbox" id="remember" name="remember">
+        Lembrar de mim
+      </label>
+    </div>
+    
+    <div>
+      <button type="submit">Login</button>
+      <a href="/cadastro">Criar nova conta</a>
+    </div>
+  </form>
+{% endblock %}

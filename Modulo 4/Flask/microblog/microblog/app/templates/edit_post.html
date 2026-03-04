@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card" style="max-width: 800px; margin: 3rem auto;">
+    <h1 style="margin-bottom: 0.5rem;">✏️ Editar Post</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">
+      Faça as alterações necessárias no seu post
+    </p>
+    
+    <form action="/post/{{ post.id }}/edit" method="post" novalidate>
+      <div class="form-group">
+        <label for="body">
+          Conteúdo do Post
+          <span class="sr-only">(obrigatório)</span>
+        </label>
+        <textarea name="body" 
+                  id="body" 
+                  rows="8" 
+                  required
+                  aria-required="true"
+                  autofocus>{{ post.body }}</textarea>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button type="submit" class="btn btn-primary">
+          <span aria-hidden="true">💾</span> Salvar Alterações
+        </button>
+        <a href="/" class="btn btn-secondary">
+          <span aria-hidden="true">←</span> Cancelar
+        </a>
+      </div>
+    </form>
+    
+    <hr>
+    
+    <div class="post-meta" style="border-top: none; padding-top: 0;">
+      <time datetime="{{ post.timestamp.isoformat() }}">
+        Post criado em: {{ post.timestamp.strftime('%d/%m/%Y às %H:%M') }}
+      </time>
+      
+      {% if post.edited_at %}
+        <span class="post-edited">
+          <span aria-hidden="true">✏️</span>
+          Última edição: {{ post.edited_at.strftime('%d/%m/%Y às %H:%M') }}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

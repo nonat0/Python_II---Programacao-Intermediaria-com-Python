@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Microblog - Compartilhe seus pensamentos com o mundo">
+    <title>{{ title }} - Microblog</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Skip to main content (acessibilidade) -->
+    <a href="#main-content" class="skip-to-main">Pular para o conteúdo principal</a>
+    
+    <!-- Navegação -->
+    <nav class="navbar" role="navigation" aria-label="Navegação principal">
+        <div class="navbar-content">
+            <a href="/" class="navbar-brand" aria-label="Microblog - Página inicial">
+                Microblog
+            </a>
+            
+            <ul class="navbar-menu">
+                {% if current_user.is_authenticated %}
+                    <li><a href="/" class="navbar-link" aria-label="Página inicial">🏠 Home</a></li>
+                    <li><a href="/post" class="navbar-link" aria-label="Criar novo post">✍️ Escrever</a></li>
+                    <li><a href="/logout" class="navbar-link" aria-label="Sair da conta">🚪 Sair</a></li>
+                {% else %}
+                    <li><a href="/login" class="navbar-link" aria-label="Fazer login">🔐 Login</a></li>
+                    <li><a href="/cadastro" class="navbar-link" aria-label="Criar conta">✨ Cadastrar</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Conteúdo principal -->
+    <main id="main-content" class="container" role="main">
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div aria-live="polite" aria-atomic="true">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {% if category == 'success' %}
+                                <span aria-hidden="true">✓</span>
+                            {% elif category == 'error' %}
+                                <span aria-hidden="true">✗</span>
+                            {% else %}
+                                <span aria-hidden="true">ℹ</span>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Conteúdo da página -->
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="text-center text-muted" style="padding: 2rem 0; margin-top: 4rem;">
+        <p>&copy; 2025 - Microblog - 🤖Projeto Desenvolve Itabira. Feito com Flask 🐍</p>
+    </footer>
+</body>
+</html>
